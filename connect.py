@@ -31,12 +31,22 @@ def to_plc(x, y, block, color, degree, side):
 # Function that waits until plc has send ready signal
 def from_plc():
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.settimeout(10)
     plc_address = (ip, port)
     print(sys.stderr, 'connecting to %s port %s' % plc_address)
-    s.connect(plc_address)  # Hij wacht hier op de PLC
+
+    try:
+        s.connect(plc_address)  # Hij wacht hier op de PLC
+    except Exception:
+        print("Can't connet to PLC! Program will run anyway. Press Esc to retry")
+
     while True:
+
         a = s.recv(4906)  # Recieve from plc, Python stops here.
+        print("test 39")
+
         b = struct.unpack(">h", a)[0]  # unpack the struct. place it in b position [0]
+        print("test 42")
         if b != 0:  # ">h" turn least and most significant bit
             print("PLC is ready, start finding some blocks!")
             s.close()

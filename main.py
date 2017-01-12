@@ -64,13 +64,18 @@ def get_color(code):
 
 
 def get_edges(img, low, high):
+    cv2.imwrite("C:/Users/kwint/Documents/1. School/Python dingen/project/image.jpg", img)
+
     imggray_temp = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    cv2.imwrite("C:/Users/kwint/Documents/1. School/Python dingen/project/grayscale.jpg", imggray_temp)
 
     # Maak imggray "smoother" voor minder ruis en dus betere detectie
     imggray = cv2.GaussianBlur(imggray_temp, (5, 5), 0)
+    cv2.imwrite("C:/Users/kwint/Documents/1. School/Python dingen/project/blur.jpg", imggray)
 
     # Voor canny methode uit, geeft afbeelding met randen
     img_edges = cv2.Canny(imggray, low, high)
+    cv2.imwrite("C:/Users/kwint/Documents/1. School/Python dingen/project/edges.jpg", img_edges)
     print("Img edges gemaakt")
 
     return img_edges
@@ -85,8 +90,10 @@ webcam = init()
 while True:
 
     connect.from_plc()
+    retval = True
+    img = cv2.imread("C:/Users/kwint/Documents/1. School/Python dingen/project/test.jpg")
 
-    retval, img = webcam.read()
+    #retval, img = webcam.read()
     if retval:
 
         img_color = color.mask_img(color_code, img)
@@ -115,6 +122,7 @@ while True:
         cv2.imshow("beeld1", img)
         cv2.imshow("beeld2", img_color)
         cv2.imshow("beeld3", img_edges)
+        cv2.imwrite("C:/Users/kwint/Documents/1. School/Python dingen/project/gevonden.jpg", img)
 
         if cv2.waitKey(10) == 27:
             break
