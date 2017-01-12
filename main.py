@@ -2,6 +2,7 @@ import cv2
 import blokje
 import color
 import connect
+import calibrate
 
 
 def nothing(x):
@@ -49,6 +50,14 @@ def init():
     return webcam
 
 
+def calibration(cam):
+    while True:
+        retval, img = cam.read()
+        if retval:
+            b, x, y = calibrate.calibrate(img)
+            return b, x, y
+
+
 def next_color(code):
     code += 1
     if code >= 3:
@@ -80,54 +89,68 @@ def get_edges(img, low, high):
 
     return img_edges
 
-
-# kalibreer()
-
-
+# init and calibration
 color_code = 1
 webcam = init()
+b, x, y = calibration(webcam)
 
+# main loop
 while True:
 
+    # Wait for connection from PLC
     connect.from_plc()
-    retval = True
-    img = cv2.imread("C:/Users/kwint/Documents/1. School/Python dingen/project/test.jpg")
 
-    #retval, img = webcam.read()
+    # img = cv2.imread("C:/Users/kwint/Documents/1. School/Python dingen/project/test.jpg")
+
+    # Get image from webcam
+    retval, img = webcam.read()
     if retval:
 
-        img_color = color.mask_img(color_code, img)
+        # warp image from with data gotten from calibration
+        img_warped = calibrate.warp(img, b, x, y)
 
-        # convert img color to edges
+        # Filter one color out image
+        img_color = color.mask_img(color_code, img_warped)
+
+        # convert img color to edges. Also check trackbar status
         low = cv2.getTrackbarPos('laag', 'trackbars')
         high = cv2.getTrackbarPos('hoog', 'trackbars')
 
         img_edges = get_edges(img_color, low, high)
 
+        # Check for a shape in image
         tmp = blokje.herken(img_edges, img)
 
+        # If shape found, send it to PLC
         if tmp:
-            x, y, shape, degree, side, img = tmp
+            x, y, shape, degree, side = tmp
             print("blokje gevonden")
             print("x: ", type(x))
             # send.to_plc(x, y, shape, color, degree, side)
 
+        # If shape not found, tmp is false, print error message and go on
         else:
 
             print("Geen blokje gevonden in de kleur", get_color(color_code))
 
+        # Shape found or not, let's check the next color
         color_code = next_color(color_code)
+
+        # Is for testing
         print("color_code main: ", color_code)
 
+        # Show images to windows
         cv2.imshow("beeld1", img)
         cv2.imshow("beeld2", img_color)
         cv2.imshow("beeld3", img_edges)
+        cv2.imshow("beeld4", img_warped)
         cv2.imwrite("C:/Users/kwint/Documents/1. School/Python dingen/project/gevonden.jpg", img)
 
+        # Press esc to exit program
         if cv2.waitKey(10) == 27:
             break
 
 webcam.release()
 cv2.destroyAllWindows()
 
-# wacht op PLC signaal voor volgende rotine
+

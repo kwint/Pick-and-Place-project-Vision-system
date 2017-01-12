@@ -30,7 +30,6 @@ def herken(img_gray, img):
             (x, y, w, h) = cv2.boundingRect(approx)
             ar = w / float(h)
 
-
             if 0.95 <= ar <= 1.05:
                 shape = 1 # Shape 1  = kubus
                 height = 1
@@ -47,14 +46,15 @@ def herken(img_gray, img):
         else:
             return False
 
-        cv2.putText(img_show, "Height :", (10, 420), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
-        cv2.putText(img_show, "Graden:", (10, 440), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
-        cv2.putText(img_show, "Shape :", (10, 460), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
-        cv2.putText(img_show, str(height), (80, 420), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
-        cv2.putText(img_show, str(angle), (80, 440), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
-        cv2.putText(img_show, str(shape), (80, 460), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
+        # cv2.putText(img_show, "Height :", (10, 420), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
+        # cv2.putText(img_show, "Graden:", (10, 440), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
+        # cv2.putText(img_show, "Shape :", (10, 460), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
+        # cv2.putText(img_show, str(height), (80, 420), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
+        # cv2.putText(img_show, str(angle), (80, 440), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
+        # cv2.putText(img_show, str(shape), (80, 460), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
+        #
+        # cv2.imshow("beeld4", img_show)
 
-        cv2.imshow("beeld4", img_show)
-
-        print("Blokje gevonden met volgende gegevens: \nX: ", cx, "Y: ", cy, "Shape: ", shape, "Hoek: ", angle, "Hoogte/kant: ", height)
-        return cx, cy, shape, angle, height, img
+        print("Blokje gevonden met volgende gegevens: \nX: ", cx, "Y: ", cy, "Shape: ", shape, "Hoek: ", angle,
+              'Hoogte/kant: ', height)
+        return cx, cy, shape, angle, height
