@@ -1,8 +1,10 @@
 import cv2
 import numpy as np
 
+str1 = "\x1b[0;30;41m"
+str2 = "\x1b[0m"
 
-def herken(img_gray, img):
+def recognize(img_gray, img):
     _, bin = cv2.threshold(img_gray, 0, 255, cv2.THRESH_BINARY)
     bin, contours, hierachy = cv2.findContours(bin, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     contours = sorted(contours, key=cv2.contourArea, reverse=True)[:5]
@@ -55,6 +57,6 @@ def herken(img_gray, img):
         #
         # cv2.imshow("beeld4", img_show)
 
-        print("Blokje gevonden met volgende gegevens: \nX: ", cx, "Y: ", cy, "Shape: ", shape, "Hoek: ", angle,
+        print(str1 + "Blokje gevonden met volgende gegevens:" + str2, "\nX: ", cx, "Y: ", cy, "Shape: ", shape, "Hoek: ", angle,
               'Hoogte/kant: ', height)
         return cx, cy, shape, angle, height

@@ -2,6 +2,9 @@
 import cv2
 import numpy as np
 
+str1 = "\x1b[0;30;45m"
+str2 = "\x1b[0m"
+
 
 def calibrate(img):
     # De X en Y coordinaten array aanmaken:

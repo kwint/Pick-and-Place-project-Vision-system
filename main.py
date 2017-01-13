@@ -1,16 +1,18 @@
 import cv2
-import blokje
+import shape
 import color
 import connect
 import calibrate
 
+str1 = "\x1b[0;30;44m"
+str2 = "\x1b[0m"
 
 def nothing(x):
     pass
 
 
 def init():
-    print("Start init")
+    print(str1 + "Start init" + str2)
 
     # Make windows to show webcam image, gray image etc
     cv2.WINDOW_AUTOSIZE
@@ -47,14 +49,17 @@ def init():
     cv2.createTrackbar('hoog', 'trackbars', 200, 1000, nothing)
 
     # return webcam info
+    print(str1 + "Init Done" + str2)
     return webcam
 
 
 def calibration(cam):
+    print(str1 + "Start calibration" + str2)
     while True:
         retval, img = cam.read()
         if retval:
             b, x, y = calibrate.calibrate(img)
+            print(str1 + "Calibration done" + str2)
             return b, x, y
 
 
@@ -67,9 +72,9 @@ def next_color(code):
 
 def get_color(code):
     if code == 1:
-        return "geel"
+        return "yellow"
     if code == 2:
-        return "rood"
+        return "red"
 
 
 def get_edges(img, low, high):
@@ -92,11 +97,13 @@ def get_edges(img, low, high):
 # init and calibration
 color_code = 1
 webcam = init()
-b, x, y = calibration(webcam)
+#b, x, y = calibration(webcam)
 
 # main loop
+print(str1 + "Start loop" + str2)
 while True:
 
+    print(str1 + "Top of loop. Waiting for plc" + str2)
     # Wait for connection from PLC
     connect.from_plc()
 
@@ -113,31 +120,31 @@ while True:
         img_color = color.mask_img(color_code, img_warped)
 
         # convert img color to edges. Also check trackbar status
-        low = cv2.getTrackbarPos('laag', 'trackbars')
-        high = cv2.getTrackbarPos('hoog', 'trackbars')
+        low = cv2.getTrackbarPos('low', 'trackbars')
+        high = cv2.getTrackbarPos('high', 'trackbars')
 
         img_edges = get_edges(img_color, low, high)
 
         # Check for a shape in image
-        tmp = blokje.herken(img_edges, img)
+        tmp = shape.recognize(img_edges, img)
 
         # If shape found, send it to PLC
         if tmp:
             x, y, shape, degree, side = tmp
-            print("blokje gevonden")
-            print("x: ", type(x))
+            print(str1 + "Found a shape!" + str2)
+            print(str1 + "x: ", type(x) + str2)
             # send.to_plc(x, y, shape, color, degree, side)
 
         # If shape not found, tmp is false, print error message and go on
         else:
 
-            print("Geen blokje gevonden in de kleur", get_color(color_code))
+            print(str1 + "Didn't found a shape with color: " + str2, get_color(color_code))
 
         # Shape found or not, let's check the next color
         color_code = next_color(color_code)
 
         # Is for testing
-        print("color_code main: ", color_code)
+        print(str1 + "color_code main: " + str2, color_code)
 
         # Show images to windows
         cv2.imshow("beeld1", img)

@@ -2,7 +2,8 @@
 # import sys
 import cv2
 import numpy as np
-
+str1 = "\x1b[0;30;42m"
+str2 = "\x1b[0m"
 
 def mask_img(color, img):
     # gooi mask (afhankelijk van kleur) over img
@@ -23,12 +24,12 @@ def mask_img(color, img):
 
         maskyellow = cv2.inRange(hsv, lower_yellow, upper_yellow)
         yellow = cv2.bitwise_and(img, img, mask=maskyellow)
-        print("yellow image gemaakt")
+        print(str1 + "yellow image gemaakt" + str2)
         return yellow
 
     if color == 2:  # keur is rood
 
         maskred = cv2.inRange(hsv, lower_red, upper_red)
         red = cv2.bitwise_and(img, img, mask=maskred)
-        print("red image gemaakt")
+        print(str1 + "red image gemaakt" + str2)
         return red
