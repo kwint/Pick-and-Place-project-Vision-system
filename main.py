@@ -97,7 +97,7 @@ def get_edges(img, low, high):
 # init and calibration
 color_code = 1
 webcam = init()
-#b, x, y = calibration(webcam)
+b, x, y = calibration(webcam)
 
 # main loop
 print(str1 + "Start loop" + str2)
