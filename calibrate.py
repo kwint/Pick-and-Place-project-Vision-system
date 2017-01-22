@@ -93,6 +93,9 @@ def calibrate(img):
     #         cv2.imshow("Output", Plaat)
     #         if cv2.waitKey(10) == 27:
     #             break
+    print(x)
+    print(y)
+    print(b)
     return b, x, y,
 
 
