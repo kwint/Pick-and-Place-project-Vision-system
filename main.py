@@ -107,9 +107,9 @@ def to_mm(x, y, img):
     y_mm = 199 / y_img * y
     x_mm = 278 / x_img * x
     x_mm -= 159
-    y_mm += 158
+    y_mm -= 158
 
-    return x_mm, y_mm
+    return int(x_mm), int(y_mm)
 
 
 # Main:
