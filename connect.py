@@ -31,6 +31,7 @@ def to_plc(x, y, block, color, degree):
         s.send(arr)
         print(str1 + "Bye!" + str2)
         s.close()
+        return
 
 
 # Function that waits until plc has send ready signal
