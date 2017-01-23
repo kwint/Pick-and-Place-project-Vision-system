@@ -25,13 +25,13 @@ def recognize(img_gray, img):
 
         center = rect[0]
         angle = rect[2]
-        angle = round(angle, 2) + 180
+        angle = round(angle, 2)
         cx, cy = center
         cx = int(cx)
         cy = int(cy)
 
         epsilon = cv2.arcLength(c, True)
-        approx = cv2.approxPolyDP(c, 0.02 * epsilon, True)
+        approx = cv2.approxPolyDP(c, 0.03 * epsilon, True)
 
         if len(approx) == 4:
             (x, y, w, h) = cv2.boundingRect(approx)

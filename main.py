@@ -35,6 +35,15 @@ def init():
 
     cv2.moveWindow("beeld4", 640 * 2, 480)
 
+    # cv2.namedWindow('image', cv2.WINDOW_AUTOSIZE)
+    # cv2.moveWindow('image', 640, 0)
+    # cv2.createTrackbar('B', 'image', 0, 255, nothing)
+    # cv2.createTrackbar('G', 'image', 0, 255, nothing)
+    # cv2.createTrackbar('R', 'image', 0, 255, nothing)
+    #
+    # cv2.createTrackbar('B1', 'image', 0, 255, nothing)
+    # cv2.createTrackbar('G1', 'image', 0, 255, nothing)
+    # cv2.createTrackbar('R1', 'image', 0, 255, nothing)
 
     # Make connection to webcam
     webcam = cv2.VideoCapture(0)
@@ -84,7 +93,7 @@ def get_edges(img):
     cv2.imwrite("C:/Users/kwint/Documents/1. School/Python dingen/project/blur.jpg", imggray)
 
     # Voor canny methode uit, geeft afbeelding met randen
-    img_edges = cv2.Canny(imggray, 100, 200)
+    img_edges = cv2.Canny(imggray, 60, 100)
     cv2.imwrite("C:/Users/kwint/Documents/1. School/Python dingen/project/edges.jpg", img_edges)
     print("Img edges gemaakt")
 
@@ -95,7 +104,6 @@ def get_edges(img):
 # init and calibration
 color_code = 1
 webcam = init()
-b_cal, x_cal, y_cal = calibration(webcam)
 b_cal, x_cal, y_cal = calibration(webcam)
 
 # main loop
@@ -127,8 +135,8 @@ while True:
         # If shape found, send it to PLC
         if tmp:
             x, y, shape, degree, side = tmp
-            print(str1 + "Found a shape!" + str2)
-            print(str1 + "x: " + str2, type(x_cal))
+            print(str1 + "Found a shape!" + str2, get_color(color_code))
+
             #connect.to_plc(x, y, shape, color, degree, side)
 
         # If shape not found, tmp == false, print error message and go on
@@ -138,9 +146,6 @@ while True:
 
         # Shape found or not, let's check the next color
         color_code = next_color(color_code)
-
-        # Is for testing
-        print(str1 + "color_code main: " + str2, color_code)
 
         # Show images to windows
         cv2.imshow("beeld1", img)
