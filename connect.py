@@ -22,7 +22,7 @@ def to_plc(x, y, block, color, degree):
     print(str1 + "Building array!" + str2)
     # 'h' gives 2 byte int value, do not use 'i' it wont work :((
     # [x,  y,  z, blok, kleur, draai, kant]
-    arr = array('h', [x, y, block, color, degree])
+    arr = array('h', [x, y, block, color, degree, 1, 2, 3, 4, 5])
     print(str1 + "Swapping array!" + str2, arr)
     # swap integer [BIG <> LITTLE endian]
     arr.byteswap()
