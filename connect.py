@@ -48,11 +48,10 @@ def from_plc():
             break
         except Exception:
             print(str1 + "Can't connet to PLC! s.recv failure" + str2)
-        if a != 0:
-            b = struct.unpack(">h", a)[0]  # unpack the struct. place it in b position [0]
-            a = 0
-            print(str1 + "test 42" + str2)
-            if b != 0:  # ">h" turn least and most significant bit
-                print(str1 + "PLC is ready, start finding some blocks!" + str2)
-                s.close()
-                return
+
+    b = struct.unpack(">h", a)[0]  # unpack the struct. place it in b position [0]
+    print(str1 + "test 42" + str2)
+    if b != 0:  # ">h" turn least and most significant bit
+        print(str1 + "PLC is ready, start finding some blocks!" + str2)
+        s.close()
+        return
