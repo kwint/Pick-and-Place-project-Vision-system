@@ -114,6 +114,7 @@ while True:
     print(str1 + "Top of loop. Waiting for plc" + str2)
     # Wait for connection from PLC
     connect.from_plc()
+    gotit = False
 
     while True:
 
