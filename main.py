@@ -103,7 +103,8 @@ def get_edges(img):
 
 def to_mm(x, y, img):
     y_img, x_img, bin = img.shape
-
+    print(199/y_img)
+    print(278/x_img)
     y_mm = 199 / y_img * y
     x_mm = 278 / x_img * x
     x_mm -= 159
