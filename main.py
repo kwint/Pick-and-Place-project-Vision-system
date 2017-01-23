@@ -100,6 +100,11 @@ def get_edges(img):
 
     return img_edges
 
+def to_mm(x, y):
+    x = int((x / 2.24) - 36)
+
+    y = int((y / 2.30) - 114)
+    return x, y
 
 # Main:
 # init and calibration
@@ -141,8 +146,12 @@ while True:
             if tmp:
                 x_got, y_got, shape, degree = tmp
                 print(str1 + "Found a shape!" + str2, get_color(color_code))
-                print(type(x_got), type(y_got), type(shape), type(degree), type(color_code), color_code)
-                connect.to_plc(x_got, y_got, shape, color_code, degree)
+
+                x_mm, y_mm = to_mm(x_got, y_got)
+                print(x_mm, y_mm)
+                print(type(x_mm), type(y_mm), type(shape), type(degree), type(color_code), color_code)
+
+                connect.to_plc(x_mm, y_mm, shape, color_code, degree)
                 ready = False
 
             # If shape not found, tmp == false, print error message and go on
