@@ -15,7 +15,7 @@ def nothing(x):
 
 def init():
     print(str1 + "Start init" + str2)
-    # hallo kwintie
+    # ghallow kwintie
     # Make windows to show webcam image, gray image etc
     cv2.WINDOW_AUTOSIZE
 
