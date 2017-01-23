@@ -140,8 +140,8 @@ while True:
             if tmp:
                 x_got, y_got, shape, degree = tmp
                 print(str1 + "Found a shape!" + str2, get_color(color_code))
-                print(type(x_got), type(y_got), type(shape), type(degree), type(color), color)
-                connect.to_plc(x_got, y_got, shape, color, degree)
+                print(type(x_got), type(y_got), type(shape), type(degree), type(color_code), color_code)
+                connect.to_plc(x_got, y_got, shape, color_code, degree)
                 gotit = True
 
             # If shape not found, tmp == false, print error message and go on
