@@ -19,19 +19,18 @@ def to_plc(x, y, block, color, degree):
     print(sys.stderr, str1 + 'connecting to %s port %s' % plc_address + str2)
     s.connect(plc_address)  # Hij wacht hier op de PLC
 
-    while True:
-        print(str1 + "Building array!" + str2)
-        # 'h' gives 2 byte int value, do not use 'i' it wont work :((
-        # [x,  y,  z, blok, kleur, draai, kant]
-        arr = array('h', [x, y, block, color, degree])
-        print(str1 + "Swapping array!" + str2, arr)
-        # swap integer [BIG <> LITTLE endian]
-        arr.byteswap()
-        print(str1 + "Sending array:" + str2, arr)
-        s.send(arr)
-        print(str1 + "Bye!" + str2)
-        s.close()
-        return
+    print(str1 + "Building array!" + str2)
+    # 'h' gives 2 byte int value, do not use 'i' it wont work :((
+    # [x,  y,  z, blok, kleur, draai, kant]
+    arr = array('h', [x, y, block, color, degree])
+    print(str1 + "Swapping array!" + str2, arr)
+    # swap integer [BIG <> LITTLE endian]
+    arr.byteswap()
+    print(str1 + "Sending array:" + str2, arr)
+    s.send(arr)
+    print(str1 + "Bye!" + str2)
+    s.close()
+    return
 
 
 # Function that waits until plc has send ready signal
