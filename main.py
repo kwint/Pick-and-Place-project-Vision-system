@@ -117,10 +117,10 @@ def to_mm(x, y, img):
     # print(trans_matrix)
     # trans_vector = trans_matrix * vector
     # print(trans_vector)
+    factor = 0.93
+    cx = int(((x / 1.73) - 137)* 0.92)
 
-    cx = int((x / 1.73) - 148)
-
-    cy = int((y / 1.69)-172)
+    cy = int(((y / 1.69)-169)* 0.93)
 
     return cx, cy
 
