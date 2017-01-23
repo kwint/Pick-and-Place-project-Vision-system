@@ -96,7 +96,7 @@ def get_edges(img):
     # Voor canny methode uit, geeft afbeelding met randen
     img_edges = cv2.Canny(imggray, 60, 100)
     cv2.imwrite("C:/edges.jpg", img_edges)
-    print("Img edges gemaakt")
+    print(str1 + "IMG processing done, edges made" + str2)
 
     return img_edges
 
@@ -114,7 +114,7 @@ while True:
         break
     print(str1 + "Top of loop. Waiting for plc" + str2)
     # Wait for connection from PLC
-    #connect.from_plc()
+    connect.from_plc()
     ready = True
 
     while ready:
@@ -142,7 +142,7 @@ while True:
                 x_got, y_got, shape, degree = tmp
                 print(str1 + "Found a shape!" + str2, get_color(color_code))
                 print(type(x_got), type(y_got), type(shape), type(degree), type(color_code), color_code)
-                #connect.to_plc(x_got, y_got, shape, color_code, degree)
+                connect.to_plc(x_got, y_got, shape, color_code, degree)
                 ready = False
 
             # If shape not found, tmp == false, print error message and go on

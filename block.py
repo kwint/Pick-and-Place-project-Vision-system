@@ -9,7 +9,7 @@ str2 = "\x1b[0m"
 
 
 def recognize(img_gray, img):
-    print("Hallo")
+    print(str1 + "Looking for block!" + str2)
     _, bin = cv2.threshold(img_gray, 0, 255, cv2.THRESH_BINARY)
     bin, contours, hierachy = cv2.findContours(bin, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     contours = sorted(contours, key=cv2.contourArea, reverse=True)[:5]
