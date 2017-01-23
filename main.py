@@ -84,18 +84,18 @@ def get_color(code):
 
 
 def get_edges(img):
-    cv2.imwrite("C:/Users/kwint/Documents/1. School/Python dingen/project2/project/image.jpg", img)
+    cv2.imwrite("C:/image.jpg", img)
 
     imggray_temp = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    cv2.imwrite("C:/Users/kwint/Documents/1. School/Python dingen/project2/project/grayscale.jpg", imggray_temp)
+    cv2.imwrite("C:/grayscale.jpg", imggray_temp)
 
     # Maak imggray "smoother" voor minder ruis en dus betere detectie
     imggray = cv2.GaussianBlur(imggray_temp, (5, 5), 0)
-    cv2.imwrite("C:/Users/kwint/Documents/1. School/Python dingen/project2/project/blur.jpg", imggray)
+    cv2.imwrite("C:/blur.jpg", imggray)
 
     # Voor canny methode uit, geeft afbeelding met randen
     img_edges = cv2.Canny(imggray, 60, 100)
-    cv2.imwrite("C:/Users/kwint/Documents/1. School/Python dingen/project2/project/edges.jpg", img_edges)
+    cv2.imwrite("C:/edges.jpg", img_edges)
     print("Img edges gemaakt")
 
     return img_edges
@@ -110,13 +110,14 @@ b_cal, x_cal, y_cal = calibration(webcam)
 # main loop
 print(str1 + "Start loop" + str2)
 while True:
-
+    if cv2.waitKey(10) == 27:
+        break
     print(str1 + "Top of loop. Waiting for plc" + str2)
     # Wait for connection from PLC
-    connect.from_plc()
-    gotit = False
+    #connect.from_plc()
+    ready = True
 
-    while True:
+    while ready:
 
         # img = cv2.imread("C:/Users/kwint/Documents/1. School/Python dingen/project/test.jpg")
 
@@ -141,8 +142,8 @@ while True:
                 x_got, y_got, shape, degree = tmp
                 print(str1 + "Found a shape!" + str2, get_color(color_code))
                 print(type(x_got), type(y_got), type(shape), type(degree), type(color_code), color_code)
-                connect.to_plc(x_got, y_got, shape, color_code, degree)
-                gotit = True
+                #connect.to_plc(x_got, y_got, shape, color_code, degree)
+                ready = False
 
             # If shape not found, tmp == false, print error message and go on
             else:
@@ -157,10 +158,7 @@ while True:
             cv2.imshow("beeld2", img_color)
             cv2.imshow("beeld3", img_edges)
             cv2.imshow("beeld4", img_warped)
-            cv2.imwrite("C:/Users/kwint/Documents/1. School/Python dingen/project2/project/gevonden.jpg", img)
-
-            if gotit:
-                break
+            cv2.imwrite("C:/gevonden.jpg", img)
 
             # Press esc to exit program
             if cv2.waitKey(10) == 27:
