@@ -100,11 +100,17 @@ def get_edges(img):
 
     return img_edges
 
-def to_mm(x, y):
-    x = int((x / 2.24) - 36)
 
-    y = int((y / 2.30) - 114)
-    return x, y
+def to_mm(x, y, img):
+    y_img, x_img, bin = img.shape
+
+    y_mm = 199 / y_img * y
+    x_mm = 278 / x_img * x
+    x_mm -= 159
+    y_mm += 158
+
+    return x_mm, y_mm
+
 
 # Main:
 # init and calibration
@@ -119,7 +125,7 @@ while True:
         break
     print(str1 + "Top of loop. Waiting for plc" + str2)
     # Wait for connection from PLC
-    connect.from_plc()
+    # connect.from_plc()
     ready = True
 
     while ready:
@@ -147,11 +153,11 @@ while True:
                 x_got, y_got, shape, degree = tmp
                 print(str1 + "Found a shape!" + str2, get_color(color_code))
 
-                x_mm, y_mm = to_mm(x_got, y_got)
+                x_mm, y_mm = to_mm(x_got, y_got, img_warped)
                 print(x_mm, y_mm)
                 print(type(x_mm), type(y_mm), type(shape), type(degree), type(color_code), color_code)
 
-                connect.to_plc(x_mm, y_mm, shape, color_code, degree)
+                # connect.to_plc(x_mm, y_mm, shape, color_code, degree)
                 ready = False
 
             # If shape not found, tmp == false, print error message and go on
