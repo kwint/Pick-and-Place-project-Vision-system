@@ -1,3 +1,5 @@
+# Geschreven door Mitchel Mulder & Quinty van Dijk
+
 import socket
 import sys
 import struct
@@ -38,19 +40,14 @@ def from_plc():
     plc_address = (ip, port)
     print(sys.stderr, str1 + 'connecting to %s port %s' % plc_address + str2)
 
-    try:
-        s.connect(plc_address)  # Hij wacht hier op de PLC
-    except Exception:
-        print(str1 + "Can't connet to PLC! Program will run anyway. Press Esc to retry \n s.connect failure" + str2)
-        return
+    s.connect(plc_address)  # Hij wacht hier op de PLC
 
     while True:
         try:
             a = s.recv(4906)  # Recieve from plc, Python stops here.
+            break
         except Exception:
-            print(str1 + "Can't connet to PLC! Program will run anyway. Press Esc to retry \n s.recv failure" + str2)
-            return
-
+            print(str1 + "Can't connet to PLC! s.recv failure" + str2)
 
         b = struct.unpack(">h", a)[0]  # unpack the struct. place it in b position [0]
         print(str1 + "test 42" + str2)

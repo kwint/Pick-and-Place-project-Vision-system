@@ -1,3 +1,5 @@
+#Geschreven door Bart van Diemen
+
 # Importeren van de Librarys
 import cv2
 import numpy as np

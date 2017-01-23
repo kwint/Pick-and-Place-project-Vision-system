@@ -1,3 +1,5 @@
+#Geschreven door Pepijn van Ek
+
 # import time
 # import sys
 import cv2
