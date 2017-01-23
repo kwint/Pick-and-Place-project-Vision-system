@@ -13,7 +13,7 @@ port = 2000
 
 
 # Function that sends data to PLC
-def to_plc(x, y, block, color, degree, side):
+def to_plc(x, y, block, color, degree):
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     plc_address = (ip, port)
     print(sys.stderr, str1 + 'connecting to %s port %s' % plc_address + str2)
@@ -23,7 +23,7 @@ def to_plc(x, y, block, color, degree, side):
         print(str1 + "Building array!" + str2)
         # 'h' gives 2 byte int value, do not use 'i' it wont work :((
         # [x,  y,  z, blok, kleur, draai, kant]
-        arr = array('h', [x, y, block, color, degree, side])
+        arr = array('h', [x, y, block, color, degree])
         print(str1 + "Swapping array!" + str2, arr)
         # swap integer [BIG <> LITTLE endian]
         arr.byteswap()

@@ -141,7 +141,7 @@ while True:
                 x, y, shape, degree, side = tmp
                 print(str1 + "Found a shape!" + str2, get_color(color_code))
 
-                connect.to_plc(x, y, shape, color, degree, side)
+                connect.to_plc(x, y, shape, color, degree)
                 gotit = True
 
             # If shape not found, tmp == false, print error message and go on
