@@ -70,14 +70,13 @@ def recognize(img_gray, img):
         rect11 = rect[1][1]
         # cv2.putText(img_show, "Height :", (10, 420), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
         cv2.putText(img, "Graden:", (10, 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
-        cv2.putText(img, "Cor", (10, 40), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
+        #cv2.putText(img, "Cor", (10, 40), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
         # cv2.putText(img_show, str(height), (80, 420), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
-        cv2.putText(img, str(angle), (80, 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
-        cv2.putText(img, str(cx), (80, 40), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
-        cv2.putText(img, str(cy), (80, 70), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
+        cv2.putText(img, str(rect[1]), (80, 100), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
+
         #
         # cv2.imshow("beeld4", img_show)
-
+        print(" lente breetblokje:", rect[1][0], rect[1][1])
         print(str1 + "Blokje gevonden met volgende gegevens:" + str2, "\nX: ", cx, "Y: ", cy, "Shape: ", shape,
               "Hoek: ", angle)
         return int(cx), int(cy), int(shape), int(angle)

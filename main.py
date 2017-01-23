@@ -5,6 +5,7 @@ import block
 import color
 import connect
 import calibrate
+import numpy as np
 
 str1 = "\x1b[0;30;44m"
 str2 = "\x1b[0m"
@@ -102,15 +103,26 @@ def get_edges(img):
 
 
 def to_mm(x, y, img):
-    y_img, x_img, bin = img.shape
-    print(199/y_img)
-    print(278/x_img)
-    y_mm = 199 / y_img * y
-    x_mm = 278 / x_img * x
-    x_mm -= 159
-    y_mm -= 158
+    # y_img, x_img, bin = img.shape
+    # print(199/y_img)
+    # print(278/x_img)
+    # y_mm = 198 / y_img * y
+    # x_mm = 2786 / x_img * x
+    # x_mm -= 159
+    # y_mm -= 158
 
-    return int(x_mm), int(y_mm)
+    # vector = np.array([[x], [y]])
+    # print(vector)
+    # trans_matrix = np.array([[-158, 120], [-159, 40]])
+    # print(trans_matrix)
+    # trans_vector = trans_matrix * vector
+    # print(trans_vector)
+
+    cx = int((x / 1.73) - 148)
+
+    cy = int((y / 1.69)-172)
+
+    return cx, cy
 
 
 # Main:
@@ -155,7 +167,10 @@ while True:
                 print(str1 + "Found a shape!" + str2, get_color(color_code))
 
                 x_mm, y_mm = to_mm(x_got, y_got, img_warped)
-                print(x_mm, y_mm)
+                print(y_mm, x_mm)
+
+                cv2.putText(img_warped, str(y_mm), (80, 40), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
+                cv2.putText(img_warped, str(x_mm), (80, 70), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
                 print(type(x_mm), type(y_mm), type(shape), type(degree), type(color_code), color_code)
 
                 # connect.to_plc(x_mm, y_mm, shape, color_code, degree)
@@ -167,7 +182,7 @@ while True:
                 print(str1 + "Didn't found a shape with color: " + str2, get_color(color_code))
 
             # Shape found or not, let's check the next color
-            color_code = next_color(color_code)
+            #color_code = next_color(color_code)
 
             # Show images to windows
             cv2.imshow("beeld1", img)
