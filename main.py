@@ -9,6 +9,7 @@ import calibrate
 str1 = "\x1b[0;30;44m"
 str2 = "\x1b[0m"
 
+
 def nothing(x):
     pass
 
@@ -100,7 +101,7 @@ def get_edges(img):
     return img_edges
 
 
-#Main:
+# Main:
 # init and calibration
 color_code = 1
 webcam = init()
@@ -114,51 +115,55 @@ while True:
     # Wait for connection from PLC
     connect.from_plc()
 
-    # img = cv2.imread("C:/Users/kwint/Documents/1. School/Python dingen/project/test.jpg")
+    while True:
 
-    # Get image from webcam
-    retval, img = webcam.read()
-    if retval:
+        # img = cv2.imread("C:/Users/kwint/Documents/1. School/Python dingen/project/test.jpg")
 
-        # warp image from with data gotten from calibration
-        img_warped = calibrate.warp(img, b_cal, x_cal, y_cal)
+        # Get image from webcam
+        retval, img = webcam.read()
+        if retval:
 
-        # Filter one color out image
-        img_color = color.mask_img(color_code, img_warped)
+            # warp image from with data gotten from calibration
+            img_warped = calibrate.warp(img, b_cal, x_cal, y_cal)
 
-        # convert img color to edges.
-        img_edges = get_edges(img_color)
+            # Filter one color out image
+            img_color = color.mask_img(color_code, img_warped)
 
-        # Check for a shape in image
-        tmp = block.recognize(img_edges, img_warped)
+            # convert img color to edges.
+            img_edges = get_edges(img_color)
 
-        # If shape found, send it to PLC
-        if tmp:
-            x, y, shape, degree, side = tmp
-            print(str1 + "Found a shape!" + str2, get_color(color_code))
+            # Check for a shape in image
+            tmp = block.recognize(img_edges, img_warped)
 
-            connect.to_plc(x, y, shape, color, degree, side)
+            # If shape found, send it to PLC
+            if tmp:
+                x, y, shape, degree, side = tmp
+                print(str1 + "Found a shape!" + str2, get_color(color_code))
 
-        # If shape not found, tmp == false, print error message and go on
-        else:
+                connect.to_plc(x, y, shape, color, degree, side)
+                gotit = True
 
-            print(str1 + "Didn't found a shape with color: " + str2, get_color(color_code))
+            # If shape not found, tmp == false, print error message and go on
+            else:
 
-        # Shape found or not, let's check the next color
-        color_code = next_color(color_code)
+                print(str1 + "Didn't found a shape with color: " + str2, get_color(color_code))
 
-        # Show images to windows
-        cv2.imshow("beeld1", img)
-        cv2.imshow("beeld2", img_color)
-        cv2.imshow("beeld3", img_edges)
-        cv2.imshow("beeld4", img_warped)
-        cv2.imwrite("C:/Users/kwint/Documents/1. School/Python dingen/project2/project/gevonden.jpg", img)
+            # Shape found or not, let's check the next color
+            color_code = next_color(color_code)
 
-        # Press esc to exit program
-        if cv2.waitKey(10) == 27:
-            break
+            # Show images to windows
+            cv2.imshow("beeld1", img)
+            cv2.imshow("beeld2", img_color)
+            cv2.imshow("beeld3", img_edges)
+            cv2.imshow("beeld4", img_warped)
+            cv2.imwrite("C:/Users/kwint/Documents/1. School/Python dingen/project2/project/gevonden.jpg", img)
+
+            if gotit:
+                break
+
+            # Press esc to exit program
+            if cv2.waitKey(10) == 27:
+                break
 
 webcam.release()
 cv2.destroyAllWindows()
-
-
