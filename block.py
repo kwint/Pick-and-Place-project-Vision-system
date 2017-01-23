@@ -79,6 +79,5 @@ def recognize(img_gray, img):
         # cv2.imshow("beeld4", img_show)
 
         print(str1 + "Blokje gevonden met volgende gegevens:" + str2, "\nX: ", cx, "Y: ", cy, "Shape: ", shape,
-              "Hoek: ", angle,
-              'Hoogte/kant: ', height)
-        return int(cx), int(cy), int(shape), int(angle), int(height)
+              "Hoek: ", angle)
+        return int(cx), int(cy), int(shape), int(angle)

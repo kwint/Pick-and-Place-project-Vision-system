@@ -36,7 +36,7 @@ def to_plc(x, y, block, color, degree):
 # Function that waits until plc has send ready signal
 def from_plc():
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    s.settimeout(10)
+    s.settimeout(5)
     plc_address = (ip, port)
     print(sys.stderr, str1 + 'connecting to %s port %s' % plc_address + str2)
 
