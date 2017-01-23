@@ -83,18 +83,18 @@ def get_color(code):
 
 
 def get_edges(img):
-    cv2.imwrite("C:/Users/kwint/Documents/1. School/Python dingen/project/image.jpg", img)
+    cv2.imwrite("C:/Users/kwint/Documents/1. School/Python dingen/project2/project/image.jpg", img)
 
     imggray_temp = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    cv2.imwrite("C:/Users/kwint/Documents/1. School/Python dingen/project/grayscale.jpg", imggray_temp)
+    cv2.imwrite("C:/Users/kwint/Documents/1. School/Python dingen/project2/project/grayscale.jpg", imggray_temp)
 
     # Maak imggray "smoother" voor minder ruis en dus betere detectie
     imggray = cv2.GaussianBlur(imggray_temp, (5, 5), 0)
-    cv2.imwrite("C:/Users/kwint/Documents/1. School/Python dingen/project/blur.jpg", imggray)
+    cv2.imwrite("C:/Users/kwint/Documents/1. School/Python dingen/project2/project/blur.jpg", imggray)
 
     # Voor canny methode uit, geeft afbeelding met randen
     img_edges = cv2.Canny(imggray, 60, 100)
-    cv2.imwrite("C:/Users/kwint/Documents/1. School/Python dingen/project/edges.jpg", img_edges)
+    cv2.imwrite("C:/Users/kwint/Documents/1. School/Python dingen/project2/project/edges.jpg", img_edges)
     print("Img edges gemaakt")
 
     return img_edges
@@ -112,7 +112,7 @@ while True:
 
     print(str1 + "Top of loop. Waiting for plc" + str2)
     # Wait for connection from PLC
-    # connect.from_plc()
+    connect.from_plc()
 
     # img = cv2.imread("C:/Users/kwint/Documents/1. School/Python dingen/project/test.jpg")
 
@@ -130,14 +130,14 @@ while True:
         img_edges = get_edges(img_color)
 
         # Check for a shape in image
-        tmp = block.recognize(img_edges, img)
+        tmp = block.recognize(img_edges, img_warped)
 
         # If shape found, send it to PLC
         if tmp:
             x, y, shape, degree, side = tmp
             print(str1 + "Found a shape!" + str2, get_color(color_code))
 
-            #connect.to_plc(x, y, shape, color, degree, side)
+            connect.to_plc(x, y, shape, color, degree, side)
 
         # If shape not found, tmp == false, print error message and go on
         else:
@@ -152,7 +152,7 @@ while True:
         cv2.imshow("beeld2", img_color)
         cv2.imshow("beeld3", img_edges)
         cv2.imshow("beeld4", img_warped)
-        cv2.imwrite("C:/Users/kwint/Documents/1. School/Python dingen/project/gevonden.jpg", img)
+        cv2.imwrite("C:/Users/kwint/Documents/1. School/Python dingen/project2/project/gevonden.jpg", img)
 
         # Press esc to exit program
         if cv2.waitKey(10) == 27:
