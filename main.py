@@ -178,7 +178,7 @@ while True:
                 cv2.putText(img_warped, str(x_mm), (80, 70), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
                 print(type(x_mm), type(y_mm), type(shape), type(degree), type(color_code), color_code)
 
-                # connect.to_plc(x_mm, y_mm, shape, color_code, degree)
+                connect.to_plc(float(y_mm), float(x_mm), shape, color_code, degree)
                 ready = False
 
             # If shape not found, tmp == false, print error message and go on
