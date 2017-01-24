@@ -34,7 +34,7 @@ def mask_img(color, img):
 
     lower_yellow = np.array([26, 108, 187])
     upper_yellow = np.array([33, 255, 255])
-    lower_red = np.array([0, 95, 135])
+    lower_red = np.array([0, 95, 160])
     upper_red = np.array([10, 255, 255])
 
     hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)

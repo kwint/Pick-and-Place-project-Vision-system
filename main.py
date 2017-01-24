@@ -74,7 +74,7 @@ def next_color(code):
     code += 1
     if code >= 3:
         code = 1
-    return code
+    return 2
 
 
 def get_color(code):
@@ -117,10 +117,15 @@ def to_mm(x, y, img):
     # print(trans_matrix)
     # trans_vector = trans_matrix * vector
     # print(trans_vector)
-    factor = 0.93
-    cx = int(((x / 1.73) - 137)* 0.92)
 
-    cy = int(((y / 1.69)-169)* 0.93)
+    cx = int((x / 1.73) - 136)
+    if cx < 0:
+        cx = int(cx*0.965)
+
+    if cx > 0:
+        cx = int(cx*0.88)
+
+    cy = int(((y / 1.69) - 175) * 0.93)
 
     return cx, cy
 
@@ -182,7 +187,7 @@ while True:
                 print(str1 + "Didn't found a shape with color: " + str2, get_color(color_code))
 
             # Shape found or not, let's check the next color
-            #color_code = next_color(color_code)
+            color_code = next_color(color_code)
 
             # Show images to windows
             cv2.imshow("beeld1", img)

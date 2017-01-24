@@ -63,7 +63,7 @@ def calibrate(img):
         w, h = template.shape[::-1]
 
         res = cv2.matchTemplate(img_gray, template, cv2.TM_CCOEFF_NORMED)
-        threshold = 0.7
+        threshold = 0.68
         loc = np.where(res >= threshold)
 
         # Slaat de coordinaten van de gevonden template match op in een array:

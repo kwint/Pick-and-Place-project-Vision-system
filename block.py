@@ -1,5 +1,5 @@
-#Geschreven door Tim Busscher
-#test 123
+# Geschreven door Tim Busscher
+# test 123
 
 import cv2
 import numpy as np
@@ -13,10 +13,9 @@ def recognize(img_gray, img):
     _, bin = cv2.threshold(img_gray, 0, 255, cv2.THRESH_BINARY)
     bin, contours, hierachy = cv2.findContours(bin, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     contours = sorted(contours, key=cv2.contourArea, reverse=True)[:5]
-    #img_show = img
-    shape = ""
+    # img_show = img
+    shape = 0
     angle = 0
-    height = 0
 
     for c in contours:
         rect = cv2.minAreaRect(c)
@@ -46,33 +45,33 @@ def recognize(img_gray, img):
         x, y, w, h = cv2.boundingRect(c)
         cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
 
-
         if len(approx) == 4:
             (x, y, w, h) = cv2.boundingRect(approx)
             ar = w / float(h)
 
-            if 0.95 <= ar <= 1.05:
+            if 0 < abs(rect[1][0] - rect[1][1]) < 10:
                 shape = 1  # Shape 1  = kubus
-                height = 1
-                cv2.drawContours(img, [box], -1, (255, 0, 0), 2)
 
-            else:
-                shape = 2  # Shape 2 = kubus
-                cv2.drawContours(img, [box], -1, (255, 0, 0), 2)
+            elif 35 < abs(rect[1][0] - rect[1][1]) < 45:  # ligt plat
+                shape = 2
+            elif 55 < abs(rect[1][0] - rect[1][1]) < 80:
+                shape = 3
 
-                if 1.70 <= ar <= 2.00:  # ligt plat
-                    height = 2
-                if 0.40 <= ar <= 0.70:
-                    height = 3
+            elif shape == 0:
+                cv2.putText(img, "shape == 0", (80, 160), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 2)
+
+            cv2.drawContours(img, [box], -1, (255, 0, 0), 2)
+
         else:
             return False
         rect10 = rect[1][0]
         rect11 = rect[1][1]
         # cv2.putText(img_show, "Height :", (10, 420), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
-        cv2.putText(img, "Graden:", (10, 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
-        #cv2.putText(img, "Cor", (10, 40), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
+        # cv2.putText(img, "Cor", (10, 40), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
         # cv2.putText(img_show, str(height), (80, 420), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
-        cv2.putText(img, str(rect[1]), (80, 100), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
+        cv2.putText(img, str(rect[1]), (80, 100), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 2)
+        cv2.putText(img, str(shape), (80, 120), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 2)
+        cv2.putText(img, str(ar), (80, 140), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 2)
 
         #
         # cv2.imshow("beeld4", img_show)
