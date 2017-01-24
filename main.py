@@ -48,7 +48,7 @@ def init():
     # cv2.createTrackbar('R1', 'image', 0, 255, nothing)
 
     # Make connection to webcam
-    webcam = cv2.VideoCapture(0)
+    webcam = cv2.VideoCapture(1)
 
     webcam.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
     webcam.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
@@ -143,7 +143,7 @@ while True:
         break
     print(str1 + "Top of loop. Waiting for plc" + str2)
     # Wait for connection from PLC
-    # connect.from_plc()
+    connect.from_plc()
     ready = True
 
     while ready:

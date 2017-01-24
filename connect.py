@@ -32,7 +32,7 @@ def to_plc(x, y, block, color, degree):
     s.close()
     return
 
-
+a = 0
 # Function that waits until plc has send ready signal
 def from_plc():
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
