@@ -48,7 +48,7 @@ def init():
     # cv2.createTrackbar('R1', 'image', 0, 255, nothing)
 
     # Make connection to webcam
-    webcam = cv2.VideoCapture(1)
+    webcam = cv2.VideoCapture(0)
 
     webcam.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
     webcam.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
@@ -101,6 +101,11 @@ def get_edges(img):
 
     return img_edges
 
+def get_image(webcam):
+    while True:
+        retval, img = webcam.read()
+        if retval:
+            return img
 
 def to_mm(x, y, img):
     # y_img, x_img, bin = img.shape
@@ -135,6 +140,9 @@ def to_mm(x, y, img):
 color_code = 1
 webcam = init()
 b_cal, x_cal, y_cal = calibration(webcam)
+img = get_image(webcam)
+img_warped = calibrate.warp(img, b_cal, x_cal, y_cal)
+cv2.imshow("beeld4", img_warped)
 
 # main loop
 print(str1 + "Start loop" + str2)
@@ -143,7 +151,9 @@ while True:
         break
     print(str1 + "Top of loop. Waiting for plc" + str2)
     # Wait for connection from PLC
-    connect.from_plc()
+    while not connect.from_plc():
+        img = get_image(webcam)
+        img_warped = calibrate.warp(img, b_cal, x_cal, y_cal)
     ready = True
 
     while ready:
@@ -151,54 +161,53 @@ while True:
         # img = cv2.imread("C:/Users/kwint/Documents/1. School/Python dingen/project/test.jpg")
 
         # Get image from webcam
-        retval, img = webcam.read()
-        if retval:
+        img = get_image(webcam)
 
-            # warp image from with data gotten from calibration
-            img_warped = calibrate.warp(img, b_cal, x_cal, y_cal)
+        # warp image from with data gotten from calibration
+        img_warped = calibrate.warp(img, b_cal, x_cal, y_cal)
 
-            # Filter one color out image
-            img_color = color.mask_img(color_code, img_warped)
+        # Filter one color out image
+        img_color = color.mask_img(color_code, img_warped)
 
-            # convert img color to edges.
-            img_edges = get_edges(img_color)
+        # convert img color to edges.
+        img_edges = get_edges(img_color)
 
-            # Check for a shape in image
-            tmp = block.recognize(img_edges, img_warped)
+        # Check for a shape in image
+        tmp = block.recognize(img_edges, img_warped)
 
-            # If shape found, send it to PLC
-            if tmp:
-                x_got, y_got, shape, degree = tmp
-                print(str1 + "Found a shape!" + str2, get_color(color_code))
+        # If shape found, send it to PLC
+        if tmp:
+            x_got, y_got, shape, degree = tmp
+            print(str1 + "Found a shape!" + str2, get_color(color_code))
 
-                x_mm, y_mm = to_mm(x_got, y_got, img_warped)
-                print(y_mm, x_mm)
+            x_mm, y_mm = to_mm(x_got, y_got, img_warped)
+            print(y_mm, x_mm)
 
-                cv2.putText(img_warped, str(y_mm), (80, 40), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
-                cv2.putText(img_warped, str(x_mm), (80, 70), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
-                print(type(x_mm), type(y_mm), type(shape), type(degree), type(color_code), color_code)
+            cv2.putText(img_warped, str(y_mm), (80, 40), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
+            cv2.putText(img_warped, str(x_mm), (80, 70), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
+            print(type(x_mm), type(y_mm), type(shape), type(degree), type(color_code), color_code)
 
-                connect.to_plc(float(y_mm), float(x_mm), shape, color_code, degree)
-                ready = False
+            connect.to_plc(float(y_mm), float(x_mm), shape, color_code, degree)
+            ready = False
 
-            # If shape not found, tmp == false, print error message and go on
-            else:
+        # If shape not found, tmp == false, print error message and go on
+        else:
 
-                print(str1 + "Didn't found a shape with color: " + str2, get_color(color_code))
+            print(str1 + "Didn't found a shape with color: " + str2, get_color(color_code))
 
-            # Shape found or not, let's check the next color
-            color_code = next_color(color_code)
+        # Shape found or not, let's check the next color
+        color_code = next_color(color_code)
 
-            # Show images to windows
-            cv2.imshow("beeld1", img)
-            cv2.imshow("beeld2", img_color)
-            cv2.imshow("beeld3", img_edges)
-            cv2.imshow("beeld4", img_warped)
-            cv2.imwrite("C:/gevonden.jpg", img)
+        # Show images to windows
+        cv2.imshow("beeld1", img)
+        cv2.imshow("beeld2", img_color)
+        cv2.imshow("beeld3", img_edges)
+        cv2.imshow("beeld4", img_warped)
+        cv2.imwrite("C:/gevonden.jpg", img)
 
-            # Press esc to exit program
-            if cv2.waitKey(10) == 27:
-                break
+        # Press esc to exit program
+        if cv2.waitKey(10) == 27:
+            break
 
 webcam.release()
 cv2.destroyAllWindows()
