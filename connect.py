@@ -20,10 +20,10 @@ def to_plc(x, y, block, color, degree):
 
     if x < 0:
         x_neg = 1
-        x *= -1
+        x = abs(x)
     if y < 0:
         y_neg = 1
-        y *= -1
+        y = abs(y)
 
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     plc_address = (ip, port)
