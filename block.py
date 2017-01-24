@@ -16,6 +16,7 @@ def recognize(img_gray, img):
     # img_show = img
     shape = 0
     angle = 0
+    anglesend =0
 
     for c in contours:
         rect = cv2.minAreaRect(c)
@@ -37,11 +38,6 @@ def recognize(img_gray, img):
         #     if rect[1][0] < rect[1][1]:
         #         angle = 90
 
-        if rect[1][0] < rect[1][1]:
-            angle = abs(angle) + 90
-        elif rect[1][0] > rect[1][1]:
-            angle = abs(angle) + 0
-
         x, y, w, h = cv2.boundingRect(c)
         cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
 
@@ -62,16 +58,25 @@ def recognize(img_gray, img):
 
             cv2.drawContours(img, [box], -1, (255, 0, 0), 2)
 
+            if rect[1][0] < rect[1][1]:
+                angle = abs(angle) + 90
+            elif rect[1][0] > rect[1][1]:
+                angle = abs(angle) + 0
+
+            if angle <= 90:
+                anglesend = angle + 90
+            if angle > 90:
+                anglesend = angle - 90
+
         else:
             return False
-        rect10 = rect[1][0]
-        rect11 = rect[1][1]
+
         # cv2.putText(img_show, "Height :", (10, 420), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
         # cv2.putText(img, "Cor", (10, 40), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
         # cv2.putText(img_show, str(height), (80, 420), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
-        cv2.putText(img, str(rect[1]), (80, 100), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 2)
+        cv2.putText(img, str(angle), (80, 100), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 2)
         cv2.putText(img, str(shape), (80, 120), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 2)
-        cv2.putText(img, str(ar), (80, 140), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 2)
+        cv2.putText(img, str(anglesend), (80, 140), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 2)
 
         #
         # cv2.imshow("beeld4", img_show)

@@ -74,7 +74,7 @@ def next_color(code):
     code += 1
     if code >= 3:
         code = 1
-    return 2
+    return code
 
 
 def get_color(code):
