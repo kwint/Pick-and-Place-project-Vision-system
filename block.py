@@ -83,4 +83,4 @@ def recognize(img_gray, img):
         print(" lente breetblokje:", rect[1][0], rect[1][1])
         print(str1 + "Blokje gevonden met volgende gegevens:" + str2, "\nX: ", cx, "Y: ", cy, "Shape: ", shape,
               "Hoek: ", angle)
-        return int(cx), int(cy), int(shape), int(angle)
+        return int(cx), int(cy), int(shape), int(anglesend)
