@@ -40,7 +40,7 @@ def recognize(img_gray, img):
 
         x, y, w, h = cv2.boundingRect(c)
         cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
-
+        print(len(approx))
         if len(approx) == 4:
             (x, y, w, h) = cv2.boundingRect(approx)
             ar = w / float(h)
@@ -48,13 +48,31 @@ def recognize(img_gray, img):
             if 0 < abs(rect[1][0] - rect[1][1]) < 10:
                 shape = 1  # Shape 1  = kubus
 
-            elif 35 < abs(rect[1][0] - rect[1][1]) < 45:  # ligt plat
+            elif 35 < abs(rect[1][0] - rect[1][1]) < 48:  # ligt plat
                 shape = 2
             elif 55 < abs(rect[1][0] - rect[1][1]) < 80:
                 shape = 3
+            elif 85 < abs(rect[1][0] - rect[1][1]) < 95:  # ligt plat grote plank (tim)
+                shape = 4
+
 
             elif shape == 0:
                 cv2.putText(img, "shape == 0", (80, 160), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 2)
+
+            cv2.drawContours(img, [box], -1, (255, 0, 0), 2)
+
+            if rect[1][0] < rect[1][1]:
+                angle = abs(angle) + 90
+            elif rect[1][0] > rect[1][1]:
+                angle = abs(angle) + 0
+
+            if angle <= 90:
+                anglesend = angle + 90
+            if angle > 90:
+                anglesend = angle - 90
+
+        elif len(approx) >= 5 or len(approx) <= 12:
+            shape = 5
 
             cv2.drawContours(img, [box], -1, (255, 0, 0), 2)
 

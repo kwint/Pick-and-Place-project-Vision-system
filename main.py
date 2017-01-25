@@ -37,15 +37,15 @@ def init():
 
     cv2.moveWindow("beeld4", 640 * 2, 480)
 
-    # cv2.namedWindow('image', cv2.WINDOW_AUTOSIZE)
-    # cv2.moveWindow('image', 640, 0)
-    # cv2.createTrackbar('B', 'image', 0, 255, nothing)
-    # cv2.createTrackbar('G', 'image', 0, 255, nothing)
-    # cv2.createTrackbar('R', 'image', 0, 255, nothing)
+    #cv2.namedWindow('image', cv2.WINDOW_AUTOSIZE)
+    #cv2.moveWindow('image', 640, 0)
+    #cv2.createTrackbar('B', 'image', 0, 255, nothing)
+    #cv2.createTrackbar('G', 'image', 0, 255, nothing)
+    #cv2.createTrackbar('R', 'image', 0, 255, nothing)
     #
-    # cv2.createTrackbar('B1', 'image', 0, 255, nothing)
-    # cv2.createTrackbar('G1', 'image', 0, 255, nothing)
-    # cv2.createTrackbar('R1', 'image', 0, 255, nothing)
+    #cv2.createTrackbar('B1', 'image', 0, 255, nothing)
+    #cv2.createTrackbar('G1', 'image', 0, 255, nothing)
+    #cv2.createTrackbar('R1', 'image', 0, 255, nothing)
 
     # Make connection to webcam
     webcam = cv2.VideoCapture(0)
@@ -151,9 +151,9 @@ while True:
         break
     print(str1 + "Top of loop. Waiting for plc" + str2)
     # Wait for connection from PLC
-    while not connect.from_plc():
-        img = get_image(webcam)
-        img_warped = calibrate.warp(img, b_cal, x_cal, y_cal)
+    #while not connect.from_plc():
+    #    img = get_image(webcam)
+    #    img_warped = calibrate.warp(img, b_cal, x_cal, y_cal)
     ready = True
 
     while ready:
@@ -187,7 +187,7 @@ while True:
             cv2.putText(img_warped, str(x_mm), (80, 70), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
             print(type(x_mm), type(y_mm), type(shape), type(degree), type(color_code), color_code)
 
-            connect.to_plc(float(y_mm), float(x_mm), shape, color_code, degree)
+            #connect.to_plc(int(y_mm), int(x_mm), shape, color_code, degree) # veranderd naar int (tim) was eerst floats
             ready = False
 
         # If shape not found, tmp == false, print error message and go on

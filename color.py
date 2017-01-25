@@ -36,7 +36,8 @@ def mask_img(color, img):
     upper_yellow = np.array([33, 255, 255])
     lower_red = np.array([0, 95, 160])
     upper_red = np.array([10, 255, 255])
-
+   # lower_green = np.array([])
+   # upper_green = np.array([])
     hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
 
     if color == 1:  # kleur is geel
@@ -54,3 +55,7 @@ def mask_img(color, img):
         print(str1 + "red image gemaakt" + str2)
         cv2.imwrite("C:/Users/kwint/Documents/1. School/Python dingen/project2/project/red.jpg", red)
         return red
+
+
+
+
