@@ -40,7 +40,6 @@ def recognize(img_gray, img):
 
         x, y, w, h = cv2.boundingRect(c)
         cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
-        print(len(approx))
         if len(approx) == 4:
             (x, y, w, h) = cv2.boundingRect(approx)
             ar = w / float(h)

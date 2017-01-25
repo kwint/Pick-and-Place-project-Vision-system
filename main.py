@@ -145,6 +145,8 @@ color_code = 1
 webcam = init()
 calibrated = False
 cal_threshold = 0.7
+y_mm_save = []
+x_mm_save = []
 
 
 # # Wait for PLC
@@ -187,6 +189,7 @@ while True:
        img_warped = calibrate.warp(img, b_cal, x_cal, y_cal)
     ready = True
     count = 0
+    count_mov = 0
 
     while ready:
 
@@ -223,18 +226,33 @@ while True:
             cv2.putText(img_warped, str(color_code), (80, 120), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 2)
             cv2.putText(img_warped, get_color(color_code), (100, 120), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 2)
 
-
             print(type(x_mm), type(y_mm), type(shape), type(degree), type(color_code), color_code)
 
             if count == 0:
-                x_mm_save = x_mm
-                y_mm_save = y_mm
-                count += 1
-            if count > 1:
-                if abs(x_mm_save - x_mm) < 2 and abs(x_mm_save - x_mm) < 2:
-                    connect.to_plc(int(y_mm), int(x_mm), shape, color_code, degree) # veranderd naar int (tim) was eerst floats
-                    ready = False
+                x_mm_temp = x_mm
+                y_mm_temp = y_mm
+                count = 1
+            elif count == 1:
+
+                x_change = abs(x_mm_temp - x_mm)
+                y_change = abs(y_mm_temp - y_mm)
                 count = 0
+                print("x_change: ", x_change)
+                print("y_change: ", y_change)
+                if x_change < 3 and y_change < 3:
+                    count_mov += 1
+                else:
+                    count_mov = 0
+
+            if count_mov > 5:
+                print("sending to plc")
+                connect.to_plc(int(y_mm), int(x_mm), shape, color_code, degree) # veranderd naar int (tim) was eerst floats
+                ready = False
+                count = 0
+                count_mov = 0
+
+            print("Count: ", count)
+            print("Count_mov", count_mov)
 
 
 
