@@ -229,9 +229,10 @@ while True:
 
 
             print(type(x_mm), type(y_mm), type(shape), type(degree), type(color_code), color_code)
-            if count_red > 20 or count_yellow > 20:
+            if count_red > 10 or count_yellow > 10:
                 connect.to_plc(int(y_mm), int(x_mm), shape, color_code, degree) # veranderd naar int (tim) was eerst floats
-                count = 0
+                count_red = 0
+                count_yellow = 0
             ready = False
 
         # If shape not found, tmp == false, print error message and go on
