@@ -146,6 +146,7 @@ calibrated = False
 cal_threshold = 0.7
 y_mm_save = []
 x_mm_save = []
+delay = 3
 
 # # Wait for PLC
 while not connect.from_plc():
@@ -242,7 +243,7 @@ while True:
                     else:
                         count_mov_yellow = 0
 
-                if count_mov_yellow > 5:
+                if count_mov_yellow > delay:
                     print("sending to plc")
                     connect.to_plc(int(y_mm), int(x_mm), shape, color_code,
                                    degree)  # veranderd naar int (tim) was eerst floats
@@ -267,7 +268,7 @@ while True:
                     else:
                         count_mov_red = 0
 
-                if count_mov_red > 5:
+                if count_mov_red > delay:
                     print("sending to plc")
                     connect.to_plc(int(y_mm), int(x_mm), shape, color_code,
                                    degree)  # veranderd naar int (tim) was eerst floats
