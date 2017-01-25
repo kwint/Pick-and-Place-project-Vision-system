@@ -70,20 +70,20 @@ def recognize(img_gray, img):
             if angle > 90:
                 anglesend = angle - 90
 
-        elif len(approx) >= 5 or len(approx) <= 12:
-            shape = 5
-
-            cv2.drawContours(img, [box], -1, (255, 0, 0), 2)
-
-            if rect[1][0] < rect[1][1]:
-                angle = abs(angle) + 90
-            elif rect[1][0] > rect[1][1]:
-                angle = abs(angle) + 0
-
-            if angle <= 90:
-                anglesend = angle + 90
-            if angle > 90:
-                anglesend = angle - 90
+        # elif len(approx) >= 5 or len(approx) <= 12:
+        #     shape = 5
+        #
+        #     cv2.drawContours(img, [box], -1, (255, 0, 0), 2)
+        #
+        #     if rect[1][0] < rect[1][1]:
+        #         angle = abs(angle) + 90
+        #     elif rect[1][0] > rect[1][1]:
+        #         angle = abs(angle) + 0
+        #
+        #     if angle <= 90:
+        #         anglesend = angle + 90
+        #     if angle > 90:
+        #         anglesend = angle - 90
 
         else:
             return False
