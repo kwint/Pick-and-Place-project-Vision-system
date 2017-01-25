@@ -50,7 +50,7 @@ def init():
     # cv2.createTrackbar('R1', 'image', 0, 255, nothing)
 
     # Make connection to webcam
-    webcam = cv2.VideoCapture(1)
+    webcam = cv2.VideoCapture(0)
 
     webcam.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
     webcam.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
@@ -150,8 +150,8 @@ x_mm_save = []
 delay = 3
 
 # # Wait for PLC
-while not connect.from_plc():
-    print(str1 + "Waiting for PLC before calibration" + str2)
+# while not connect.from_plc():
+#     print(str1 + "Waiting for PLC before calibration" + str2)
 img_warped = 0
 while not calibrated:
     # calibration:
@@ -167,7 +167,8 @@ while not calibrated:
 
         user = boolbox(msg="Calibratie oke?", title="Calibratie", choices=("[J]a", "[N]ee"), default_choice="Yes")
         if not user:
-            cal_threshold = enterbox(msg="Threshold nu is" + str(cal_threshold), title="Threshold check", default=str(cal_threshold))
+            cal_threshold = enterbox(msg="Threshold nu is" + str(cal_threshold), title="Threshold check",
+                                     default=str(cal_threshold))
         if user:
             calibrated = True
 
@@ -182,9 +183,9 @@ while True:
         break
     print(str1 + "Top of loop. Waiting for plc" + str2)
     # Wait for connection from PLC
-    while not connect.from_plc():
-        img = get_image(webcam)
-        img_warped = calibrate.warp(img, b_cal, x_cal, y_cal)
+    # while not connect.from_plc():
+    #     img = get_image(webcam)
+    #     img_warped = calibrate.warp(img, b_cal, x_cal, y_cal)
     ready = True
     count_red = 0
     count_mov_red = 0
@@ -246,11 +247,12 @@ while True:
 
                 if count_mov_yellow > delay:
                     print("sending to plc")
-                    connect.to_plc(int(y_mm), int(x_mm), shape, color_code,
-                                   degree)  # veranderd naar int (tim) was eerst floats
+                    # connect.to_plc(int(y_mm), int(x_mm), shape, color_code,
+                    #                degree)  # veranderd naar int (tim) was eerst floats
                     ready = False
                     count_yellow = 0
                     count_mov_yellow = 0
+                    count_mov_rd = 0
 
             if color_code == 2:
                 if count_red == 0:
@@ -271,11 +273,12 @@ while True:
 
                 if count_mov_red > delay:
                     print("sending to plc")
-                    connect.to_plc(int(y_mm), int(x_mm), shape, color_code,
-                                   degree)  # veranderd naar int (tim) was eerst floats
+                    # connect.to_plc(int(y_mm), int(x_mm), shape, color_code,
+                    #                degree)  # veranderd naar int (tim) was eerst floats
                     ready = False
                     count_red = 0
                     count_mov_red = 0
+                    count_mov_yellow = 0
 
             print("Count: ", count_red)
             print("Count_mov", count_mov_red)
