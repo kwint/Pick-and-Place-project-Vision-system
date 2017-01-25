@@ -138,7 +138,6 @@ def to_mm(x, y, img):
     return cx, cy
 
 
-
 # Main:
 # init and calibration
 color_code = 1
@@ -147,7 +146,6 @@ calibrated = False
 cal_threshold = 0.7
 y_mm_save = []
 x_mm_save = []
-
 
 # # Wait for PLC
 while not connect.from_plc():
@@ -175,8 +173,6 @@ while not calibrated:
     except Exception:
         print("calibratie mislukt!")
 
-
-
 # main loop
 print(str1 + "Start loop" + str2)
 while True:
@@ -185,11 +181,13 @@ while True:
     print(str1 + "Top of loop. Waiting for plc" + str2)
     # Wait for connection from PLC
     while not connect.from_plc():
-       img = get_image(webcam)
-       img_warped = calibrate.warp(img, b_cal, x_cal, y_cal)
+        img = get_image(webcam)
+        img_warped = calibrate.warp(img, b_cal, x_cal, y_cal)
     ready = True
     count_red = 0
     count_mov_red = 0
+    count_yellow = 0
+    count_mov_yellow = 0
 
     while ready:
 
@@ -271,12 +269,11 @@ while True:
 
                 if count_mov_red > 5:
                     print("sending to plc")
-                    connect.to_plc(int(y_mm), int(x_mm), shape, color_code, degree) # veranderd naar int (tim) was eerst floats
+                    connect.to_plc(int(y_mm), int(x_mm), shape, color_code,
+                                   degree)  # veranderd naar int (tim) was eerst floats
                     ready = False
                     count_red = 0
                     count_mov_red = 0
-
-
 
             print("Count: ", count_red)
             print("Count_mov", count_mov_red)
