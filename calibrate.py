@@ -8,7 +8,7 @@ str1 = "\x1b[0;30;45m"
 str2 = "\x1b[0m"
 
 
-def calibrate(img):
+def calibrate(img, threshold):
     # De X en Y coordinaten array aanmaken:
     y = []
     x = []
@@ -63,7 +63,7 @@ def calibrate(img):
         w, h = template.shape[::-1]
 
         res = cv2.matchTemplate(img_gray, template, cv2.TM_CCOEFF_NORMED)
-        threshold = 0.68
+        # threshold = 0.68 (program gets this falue when function is called
         loc = np.where(res >= threshold)
 
         # Slaat de coordinaten van de gevonden template match op in een array:
@@ -103,4 +103,5 @@ def calibrate(img):
 
 def warp(img, b, x, y):
     img_warped = cv2.warpPerspective(img, b, (x[1] + 340 - x[0], y[2] + 260 - y[0]))
+    print("image warped")
     return img_warped

@@ -6,6 +6,7 @@ import color
 import connect
 import calibrate
 import numpy as np
+from time import sleep
 
 str1 = "\x1b[0;30;44m"
 str2 = "\x1b[0m"
@@ -37,15 +38,15 @@ def init():
 
     cv2.moveWindow("beeld4", 640 * 2, 480)
 
-    #cv2.namedWindow('image', cv2.WINDOW_AUTOSIZE)
-    #cv2.moveWindow('image', 640, 0)
-    #cv2.createTrackbar('B', 'image', 0, 255, nothing)
-    #cv2.createTrackbar('G', 'image', 0, 255, nothing)
-    #cv2.createTrackbar('R', 'image', 0, 255, nothing)
+    # cv2.namedWindow('image', cv2.WINDOW_AUTOSIZE)
+    # cv2.moveWindow('image', 640, 0)
+    # cv2.createTrackbar('B', 'image', 0, 255, nothing)
+    # cv2.createTrackbar('G', 'image', 0, 255, nothing)
+    # cv2.createTrackbar('R', 'image', 0, 255, nothing)
     #
-    #cv2.createTrackbar('B1', 'image', 0, 255, nothing)
-    #cv2.createTrackbar('G1', 'image', 0, 255, nothing)
-    #cv2.createTrackbar('R1', 'image', 0, 255, nothing)
+    # cv2.createTrackbar('B1', 'image', 0, 255, nothing)
+    # cv2.createTrackbar('G1', 'image', 0, 255, nothing)
+    # cv2.createTrackbar('R1', 'image', 0, 255, nothing)
 
     # Make connection to webcam
     webcam = cv2.VideoCapture(0)
@@ -60,12 +61,12 @@ def init():
     return webcam
 
 
-def calibration(cam):
+def calibration(cam, threshold):
     print(str1 + "Start calibration" + str2)
     while True:
         retval, img = cam.read()
         if retval:
-            b, x, y = calibrate.calibrate(img)
+            b, x, y = calibrate.calibrate(img, threshold)
             print(str1 + "Calibration done" + str2)
             return b, x, y
 
@@ -101,11 +102,13 @@ def get_edges(img):
 
     return img_edges
 
+
 def get_image(webcam):
     while True:
         retval, img = webcam.read()
         if retval:
             return img
+
 
 def to_mm(x, y, img):
     # y_img, x_img, bin = img.shape
@@ -125,24 +128,51 @@ def to_mm(x, y, img):
 
     cx = int((x / 1.73) - 136)
     if cx < 0:
-        cx = int(cx*0.965)
+        cx = int(cx * 0.965)
 
     if cx > 0:
-        cx = int(cx*0.88)
+        cx = int(cx * 0.88)
 
     cy = int(((y / 1.69) - 175) * 0.93)
 
     return cx, cy
 
 
+
 # Main:
 # init and calibration
 color_code = 1
 webcam = init()
-b_cal, x_cal, y_cal = calibration(webcam)
-img = get_image(webcam)
-img_warped = calibrate.warp(img, b_cal, x_cal, y_cal)
-cv2.imshow("beeld4", img_warped)
+calibrated = False
+cal_threshold = 0.7
+
+# # Wait for PLC
+# while not connect.from_plc():
+#     print(str1 + "Waiting for PLC before calibration" + str2)
+img_warped = 0
+while not calibrated:
+    # calibration:
+    try:
+        b_cal, x_cal, y_cal = calibration(webcam, cal_threshold)
+        # show calibration status
+        img = get_image(webcam)
+        img_warped = calibrate.warp(img, b_cal, x_cal, y_cal)
+
+        print("show images:")
+        cv2.imshow("beeld4", img_warped)
+        cv2.waitKey(10)
+
+        user = input("Is calibratie gelukt? Y = Ja,  N = Nee: ")
+        if user.lower() == 'y':
+            calibrated = True
+        else:
+            print("Threshold voor calibratie is: ", cal_threshold)
+            cal_threshold = float(input("Vul nieuwe threshold in: "))
+
+    except Exception:
+        print("calibratie mislukt!")
+
+
 
 # main loop
 print(str1 + "Start loop" + str2)
@@ -151,7 +181,7 @@ while True:
         break
     print(str1 + "Top of loop. Waiting for plc" + str2)
     # Wait for connection from PLC
-    #while not connect.from_plc():
+    # while not connect.from_plc():
     #    img = get_image(webcam)
     #    img_warped = calibrate.warp(img, b_cal, x_cal, y_cal)
     ready = True
@@ -183,11 +213,15 @@ while True:
             x_mm, y_mm = to_mm(x_got, y_got, img_warped)
             print(y_mm, x_mm)
 
-            cv2.putText(img_warped, str(y_mm), (80, 40), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
-            cv2.putText(img_warped, str(x_mm), (80, 70), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
+            cv2.putText(img_warped, str(y_mm), (10, 40), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 2)
+            cv2.putText(img_warped, str(x_mm), (10, 60), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 2)
+            cv2.putText(img_warped, str(degree), (10, 80), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 2)
+            cv2.putText(img_warped, str(shape), (10, 100), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 2)
+            cv2.putText(img_warped, str(color_code), (10, 120), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 2)
+
             print(type(x_mm), type(y_mm), type(shape), type(degree), type(color_code), color_code)
 
-            #connect.to_plc(int(y_mm), int(x_mm), shape, color_code, degree) # veranderd naar int (tim) was eerst floats
+            # connect.to_plc(int(y_mm), int(x_mm), shape, color_code, degree) # veranderd naar int (tim) was eerst floats
             ready = False
 
         # If shape not found, tmp == false, print error message and go on
