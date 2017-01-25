@@ -145,7 +145,8 @@ color_code = 1
 webcam = init()
 calibrated = False
 cal_threshold = 0.7
-count = 0
+count_red = 0
+count_yellow = 0
 
 # # Wait for PLC
 while not connect.from_plc():
@@ -209,7 +210,11 @@ while True:
         # If shape found, send it to PLC
         if tmp:
             x_got, y_got, shape, degree = tmp
-            count += 2
+            if color_code == 1:
+                count_yellow += 2
+            if color_code == 2:
+                count_red += 2
+
             print(str1 + "Found a shape!" + str2, get_color(color_code))
 
             x_mm, y_mm = to_mm(x_got, y_got, img_warped)
@@ -220,17 +225,21 @@ while True:
             cv2.putText(img_warped, str(degree), (80, 80), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 2)
             cv2.putText(img_warped, str(shape), (80, 100), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 2)
             cv2.putText(img_warped, str(color_code), (80, 120), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 2)
+            cv2.putText(img_warped, get_color(color_code), (100, 120), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 2)
+
 
             print(type(x_mm), type(y_mm), type(shape), type(degree), type(color_code), color_code)
-            if count > 20:
+            if count_red > 20 or count_yellow > 20:
                 connect.to_plc(int(y_mm), int(x_mm), shape, color_code, degree) # veranderd naar int (tim) was eerst floats
                 count = 0
             ready = False
 
         # If shape not found, tmp == false, print error message and go on
         else:
-            if count > 0:
-                count -= 1
+            if color_code == 1:
+                count_yellow -= 1
+            if color_code == 2:
+                count_red -= 1
             print(str1 + "Didn't found a shape with color: " + str2, get_color(color_code))
 
         # Shape found or not, let's check the next color
