@@ -145,8 +145,7 @@ color_code = 1
 webcam = init()
 calibrated = False
 cal_threshold = 0.7
-count_red = 0
-count_yellow = 0
+
 
 # # Wait for PLC
 while not connect.from_plc():
@@ -187,6 +186,7 @@ while True:
        img = get_image(webcam)
        img_warped = calibrate.warp(img, b_cal, x_cal, y_cal)
     ready = True
+    count = 0
 
     while ready:
 
@@ -210,10 +210,6 @@ while True:
         # If shape found, send it to PLC
         if tmp:
             x_got, y_got, shape, degree = tmp
-            if color_code == 1:
-                count_yellow += 2
-            if color_code == 2:
-                count_red += 2
 
             print(str1 + "Found a shape!" + str2, get_color(color_code))
 
@@ -229,18 +225,21 @@ while True:
 
 
             print(type(x_mm), type(y_mm), type(shape), type(degree), type(color_code), color_code)
-            if count_red > 10 or count_yellow > 10:
-                connect.to_plc(int(y_mm), int(x_mm), shape, color_code, degree) # veranderd naar int (tim) was eerst floats
-                count_red = 0
-                count_yellow = 0
-            ready = False
+
+            if count == 0:
+                x_mm_save = x_mm
+                y_mm_save = y_mm
+                count += 1
+            if count > 1:
+                if abs(x_mm_save - x_mm) < 2 and abs(x_mm_save - x_mm) < 2:
+                    connect.to_plc(int(y_mm), int(x_mm), shape, color_code, degree) # veranderd naar int (tim) was eerst floats
+                    ready = False
+                count = 0
+
+
 
         # If shape not found, tmp == false, print error message and go on
         else:
-            if color_code == 1:
-                count_yellow -= 1
-            if color_code == 2:
-                count_red -= 1
             print(str1 + "Didn't found a shape with color: " + str2, get_color(color_code))
 
         # Shape found or not, let's check the next color
