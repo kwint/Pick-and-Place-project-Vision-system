@@ -5,6 +5,7 @@ import block
 import color
 import connect
 import calibrate
+from easygui import *
 import numpy as np
 from time import sleep
 
@@ -164,12 +165,12 @@ while not calibrated:
         cv2.imshow("beeld4", img_warped)
         cv2.waitKey(10)
 
-        user = input("Is calibratie gelukt? Y = Ja,  N = Nee: ")
-        if user.lower() == 'y':
+        user = boolbox(msg="Calibratie oke?", title="Calibratie", choices=("[J]a", "[N]ee"), default_choice="Yes")
+        if not user:
+            cal_threshold = enterbox(msg="Threshold nu is" + str(cal_threshold), title="Threshold check", default=str(cal_threshold))
+        if user:
             calibrated = True
-        else:
-            print("Threshold voor calibratie is: ", cal_threshold)
-            cal_threshold = float(input("Vul nieuwe threshold in: "))
+
 
     except Exception:
         print("calibratie mislukt!")
