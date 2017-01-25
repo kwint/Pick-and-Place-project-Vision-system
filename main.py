@@ -188,8 +188,8 @@ while True:
        img = get_image(webcam)
        img_warped = calibrate.warp(img, b_cal, x_cal, y_cal)
     ready = True
-    count = 0
-    count_mov = 0
+    count_red = 0
+    count_mov_red = 0
 
     while ready:
 
@@ -227,32 +227,59 @@ while True:
             cv2.putText(img_warped, get_color(color_code), (100, 120), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 2)
 
             print(type(x_mm), type(y_mm), type(shape), type(degree), type(color_code), color_code)
+            if color_code == 1:
+                if count_yellow == 0:
+                    x_mm_temp_yellow = x_mm
+                    y_mm_temp_yellow = y_mm
+                    count_yellow = 1
+                elif count_yellow == 1:
 
-            if count == 0:
-                x_mm_temp = x_mm
-                y_mm_temp = y_mm
-                count = 1
-            elif count == 1:
+                    x_change_yellow = abs(x_mm_temp_yellow - x_mm)
+                    y_change_yellow = abs(y_mm_temp_yellow - y_mm)
+                    count_yellow = 0
+                    print("x_change: ", x_change_yellow)
+                    print("y_change: ", y_change_yellow)
+                    if x_change_yellow < 3 and y_change_yellow < 3:
+                        count_mov_yellow += 1
+                    else:
+                        count_mov_yellow = 0
 
-                x_change = abs(x_mm_temp - x_mm)
-                y_change = abs(y_mm_temp - y_mm)
-                count = 0
-                print("x_change: ", x_change)
-                print("y_change: ", y_change)
-                if x_change < 3 and y_change < 3:
-                    count_mov += 1
-                else:
-                    count_mov = 0
+                if count_mov_yellow > 5:
+                    print("sending to plc")
+                    connect.to_plc(int(y_mm), int(x_mm), shape, color_code,
+                                   degree)  # veranderd naar int (tim) was eerst floats
+                    ready = False
+                    count_yellow = 0
+                    count_mov_yellow = 0
 
-            if count_mov > 5:
-                print("sending to plc")
-                connect.to_plc(int(y_mm), int(x_mm), shape, color_code, degree) # veranderd naar int (tim) was eerst floats
-                ready = False
-                count = 0
-                count_mov = 0
+            if color_code == 2:
+                if count_red == 0:
+                    x_mm_temp_red = x_mm
+                    y_mm_temp_red = y_mm
+                    count_red = 1
+                elif count_red == 1:
 
-            print("Count: ", count)
-            print("Count_mov", count_mov)
+                    x_change_red = abs(x_mm_temp_red - x_mm)
+                    y_change_red = abs(y_mm_temp_red - y_mm)
+                    count_red = 0
+                    print("x_change: ", x_change_red)
+                    print("y_change: ", y_change_red)
+                    if x_change_red < 3 and y_change_red < 3:
+                        count_mov_red += 1
+                    else:
+                        count_mov_red = 0
+
+                if count_mov_red > 5:
+                    print("sending to plc")
+                    connect.to_plc(int(y_mm), int(x_mm), shape, color_code, degree) # veranderd naar int (tim) was eerst floats
+                    ready = False
+                    count_red = 0
+                    count_mov_red = 0
+
+
+
+            print("Count: ", count_red)
+            print("Count_mov", count_mov_red)
 
 
 
