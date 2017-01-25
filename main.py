@@ -213,11 +213,13 @@ while True:
             x_mm, y_mm = to_mm(x_got, y_got, img_warped)
             print(y_mm, x_mm)
 
-            cv2.putText(img_warped, str(y_mm), (10, 40), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 2)
-            cv2.putText(img_warped, str(x_mm), (10, 60), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 2)
-            cv2.putText(img_warped, str(degree), (10, 80), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 2)
-            cv2.putText(img_warped, str(shape), (10, 100), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 2)
-            cv2.putText(img_warped, str(color_code), (10, 120), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 2)
+
+
+            cv2.putText(img_warped, str(y_mm), (80, 40), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 2)
+            cv2.putText(img_warped, str(x_mm), (80, 60), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 2)
+            cv2.putText(img_warped, str(degree), (80, 80), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 2)
+            cv2.putText(img_warped, str(shape), (80, 100), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 2)
+            cv2.putText(img_warped, str(color_code), (80, 120), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 2)
 
             print(type(x_mm), type(y_mm), type(shape), type(degree), type(color_code), color_code)
 
@@ -233,6 +235,11 @@ while True:
         color_code = next_color(color_code)
 
         # Show images to windows
+        cv2.putText(img_warped, "X_mm:", (10, 40), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 2)
+        cv2.putText(img_warped, "Y_mm:", (10, 60), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 2)
+        cv2.putText(img_warped, "Angle:", (10, 80), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 2)
+        cv2.putText(img_warped, "Block:", (10, 100), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 2)
+        cv2.putText(img_warped, "Color:", (10, 120), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 2)
         cv2.imshow("beeld1", img)
         cv2.imshow("beeld2", img_color)
         cv2.imshow("beeld3", img_edges)
