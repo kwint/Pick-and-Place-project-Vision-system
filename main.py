@@ -50,7 +50,7 @@ def init():
     # cv2.createTrackbar('R1', 'image', 0, 255, nothing)
 
     # Make connection to webcam
-    webcam = cv2.VideoCapture(0)
+    webcam = cv2.VideoCapture(1)
 
     webcam.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
     webcam.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
@@ -150,8 +150,8 @@ x_mm_save = []
 delay = 3
 
 # # Wait for PLC
-# while not connect.from_plc():
-#     print(str1 + "Waiting for PLC before calibration" + str2)
+while not connect.from_plc():
+    print(str1 + "Waiting for PLC before calibration" + str2)
 img_warped = 0
 while not calibrated:
     # calibration:
@@ -183,9 +183,9 @@ while True:
         break
     print(str1 + "Top of loop. Waiting for plc" + str2)
     # Wait for connection from PLC
-    # while not connect.from_plc():
-    #     img = get_image(webcam)
-    #     img_warped = calibrate.warp(img, b_cal, x_cal, y_cal)
+    while not connect.from_plc():
+        img = get_image(webcam)
+        img_warped = calibrate.warp(img, b_cal, x_cal, y_cal)
     ready = True
     count_red = 0
     count_mov_red = 0
@@ -247,8 +247,8 @@ while True:
 
                 if count_mov_yellow > delay:
                     print("sending to plc")
-                    # connect.to_plc(int(y_mm), int(x_mm), shape, color_code,
-                    #                degree)  # veranderd naar int (tim) was eerst floats
+                    connect.to_plc(int(y_mm), int(x_mm), shape, color_code,
+                                   degree)  # veranderd naar int (tim) was eerst floats
                     ready = False
                     count_yellow = 0
                     count_mov_yellow = 0
@@ -273,8 +273,8 @@ while True:
 
                 if count_mov_red > delay:
                     print("sending to plc")
-                    # connect.to_plc(int(y_mm), int(x_mm), shape, color_code,
-                    #                degree)  # veranderd naar int (tim) was eerst floats
+                    connect.to_plc(int(y_mm), int(x_mm), shape, color_code,
+                                   degree)  # veranderd naar int (tim) was eerst floats
                     ready = False
                     count_red = 0
                     count_mov_red = 0
