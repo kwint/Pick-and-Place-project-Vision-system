@@ -24,18 +24,18 @@ def mask_img(color, img):
     g1 = cv2.getTrackbarPos('G1', 'image')
     r1 = cv2.getTrackbarPos('R1', 'image')
 
-    lower_unit = np.array([b, g, r])
-    upper_unit = np.array([b1, g1, r1])
+    # lower_unit = np.array([b, g, r])
+    # upper_unit = np.array([b1, g1, r1])
 
     # lower_yellow = np.array([26, 108, 187])
     # upper_yellow = np.array([33, 255, 255])
     # lower_red = np.array([0, 103, 31])
     # upper_red = np.array([24, 248, 236])
 
-    lower_yellow = np.array([26, 108, 187])
-    upper_yellow = np.array([33, 255, 255])
-    lower_red = np.array([0, 95, 160])
-    upper_red = np.array([10, 255, 255])
+    lower_yellow = np.array([22, 74, 217])
+    upper_yellow = np.array([40, 255, 255])
+    lower_red = np.array([0, 99, 183])
+    upper_red = np.array([15, 255, 255])
    # lower_green = np.array([])
    # upper_green = np.array([])
     hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
@@ -53,7 +53,7 @@ def mask_img(color, img):
         maskred = cv2.inRange(hsv, lower_red, upper_red)
         red = cv2.bitwise_and(img, img, mask=maskred)
         print(str1 + "red image gemaakt" + str2)
-        cv2.imwrite("red.jpg", red)
+        cv2.imwrite("Cred.jpg", red)
         return red
 
 

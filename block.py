@@ -69,8 +69,8 @@ def recognize(img_gray, img):
                 anglesend = angle + 90
             if angle > 90:
                 anglesend = angle - 90
-            if (anglesend == 90 or anglesend == 180) and shape == 1:
-                anglesend = 0
+            if (anglesend == 0 or anglesend == 180) and shape == 1:
+                anglesend = 90
 
         # elif len(approx) >= 5 or len(approx) <= 12:
         #     shape = 5
