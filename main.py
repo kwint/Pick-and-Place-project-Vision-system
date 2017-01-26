@@ -50,7 +50,7 @@ def init():
     # cv2.createTrackbar('R1', 'image', 0, 255, nothing)
 
     # Make connection to webcam
-    webcam = cv2.VideoCapture(1)
+    webcam = cv2.VideoCapture(0)
 
     webcam.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
     webcam.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
@@ -87,18 +87,18 @@ def get_color(code):
 
 
 def get_edges(img):
-    cv2.imwrite("C:/image.jpg", img)
+    cv2.imwrite("image.jpg", img)
 
     imggray_temp = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    cv2.imwrite("C:/grayscale.jpg", imggray_temp)
+    cv2.imwrite("grayscale.jpg", imggray_temp)
 
     # Maak imggray "smoother" voor minder ruis en dus betere detectie
     imggray = cv2.GaussianBlur(imggray_temp, (5, 5), 0)
-    cv2.imwrite("C:/blur.jpg", imggray)
+    cv2.imwrite("blur.jpg", imggray)
 
     # Voor canny methode uit, geeft afbeelding met randen
     img_edges = cv2.Canny(imggray, 60, 100)
-    cv2.imwrite("C:/edges.jpg", img_edges)
+    cv2.imwrite("edges.jpg", img_edges)
     print(str1 + "IMG processing done, edges made" + str2)
 
     return img_edges
@@ -167,14 +167,16 @@ while not calibrated:
 
         user = boolbox(msg="Calibratie oke?", title="Calibratie", choices=("[J]a", "[N]ee"), default_choice="Yes")
         if not user:
-            cal_threshold = enterbox(msg="Threshold nu is" + str(cal_threshold), title="Threshold check",
-                                     default=str(cal_threshold))
+            cal_threshold = float(enterbox(msg="Threshold nu is" + str(cal_threshold), title="Threshold check",
+                                     default=str(cal_threshold)))
         if user:
             calibrated = True
 
 
     except Exception:
         print("calibratie mislukt!")
+        cal_threshold = float(enterbox(msg="Calibratie mislukt! Threshold nu is:" + str(cal_threshold), title="Threshold check",
+                             default=str(cal_threshold)))
 
 # main loop
 print(str1 + "Start loop" + str2)
@@ -302,7 +304,9 @@ while True:
         cv2.imshow("beeld2", img_color)
         cv2.imshow("beeld3", img_edges)
         cv2.imshow("beeld4", img_warped)
-        cv2.imwrite("C:/gevonden.jpg", img)
+        cv2.imwrite("gevonden.jpg", img)
+        cv2.imwrite("edges.jpg", img_edges)
+        cv2.imwrite("warped.jpg", img_warped)
 
         # Press esc to exit program
         if cv2.waitKey(10) == 27:

@@ -45,7 +45,7 @@ def mask_img(color, img):
         maskyellow = cv2.inRange(hsv, lower_yellow, upper_yellow)
         yellow = cv2.bitwise_and(img, img, mask=maskyellow)
         print(str1 + "yellow image gemaakt" + str2)
-        cv2.imwrite("C:/Users/kwint/Documents/1. School/Python dingen/project2/project/yellow.jpg", yellow)
+        cv2.imwrite("yellow.jpg", yellow)
         return yellow
 
     if color == 2:  # keur is rood
@@ -53,7 +53,7 @@ def mask_img(color, img):
         maskred = cv2.inRange(hsv, lower_red, upper_red)
         red = cv2.bitwise_and(img, img, mask=maskred)
         print(str1 + "red image gemaakt" + str2)
-        cv2.imwrite("C:/Users/kwint/Documents/1. School/Python dingen/project2/project/red.jpg", red)
+        cv2.imwrite("red.jpg", red)
         return red
 
 
